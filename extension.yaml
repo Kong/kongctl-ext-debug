@@ -1,0 +1,14 @@
+schema_version: 1
+
+publisher: kong
+name: debug
+
+runtime:
+  command: bin/kongctl-ext-debug
+
+command_paths:
+  - path:
+      - name: get
+      - name: debug
+  - path:
+      - name: debug

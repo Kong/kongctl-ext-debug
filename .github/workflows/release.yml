@@ -1,0 +1,49 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v0.1.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate tag format
+        run: |
+          if ! printf '%s' "${{ inputs.tag }}" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$'; then
+            echo "tag must match vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-prerelease" >&2
+            exit 1
+          fi
+
+      - name: Verify manifest and runtime
+        run: |
+          test -f extension.yaml
+          test -x bin/kongctl-ext-debug
+
+      - name: Build release archive
+        run: |
+          mkdir -p dist/package/bin
+          cp extension.yaml README.md dist/package/
+          cp bin/kongctl-ext-debug dist/package/bin/
+          chmod +x dist/package/bin/kongctl-ext-debug
+          tar -C dist/package -czf \
+            dist/kongctl-ext-debug-universal.tar.gz \
+            extension.yaml README.md bin/kongctl-ext-debug
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          target_commitish: ${{ github.sha }}
+          files: dist/kongctl-ext-debug-universal.tar.gz
+          generate_release_notes: true
