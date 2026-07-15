@@ -39,7 +39,7 @@ stdout.
 ## Build your own extension
 
 The fastest path is the **`kongctl-extension-builder` skill**, usable from any
-coding agent that supports skills. It scaffolds a valid `extension.yaml`,
+coding agent that supports skills. It scaffolds a valid `kongctl-extension.yaml`,
 runtime, and release workflow from a short prompt:
 
 ```
@@ -50,18 +50,20 @@ The skill encodes the manifest rules, runtime contract, and release-archive
 shape that `kongctl` expects, so you don't have to keep them in your head.
 
 If you'd rather read by example, this repo is intentionally tiny — clone it,
-rename the publisher/name in `extension.yaml`, swap in your own runtime, and
+rename the publisher/name in `kongctl-extension.yaml`, swap in your own runtime,
+and
 adjust the release workflow.
 
 ## Repo layout
 
 ```
-extension.yaml                 # manifest
+kongctl-extension.yaml         # manifest
 bin/kongctl-ext-debug          # runtime (the file referenced by runtime.command)
 .github/workflows/release.yml  # workflow_dispatch release pipeline
 ```
 
-Release archives extract to the same shape, with `extension.yaml` at the root.
+Release archives extract to the same shape, with `kongctl-extension.yaml` at
+the root.
 
 ## Releasing
 

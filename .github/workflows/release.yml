@@ -26,18 +26,18 @@ jobs:
 
       - name: Verify manifest and runtime
         run: |
-          test -f extension.yaml
+          test -f kongctl-extension.yaml
           test -x bin/kongctl-ext-debug
 
       - name: Build release archive
         run: |
           mkdir -p dist/package/bin
-          cp extension.yaml README.md dist/package/
+          cp kongctl-extension.yaml README.md dist/package/
           cp bin/kongctl-ext-debug dist/package/bin/
           chmod +x dist/package/bin/kongctl-ext-debug
           tar -C dist/package -czf \
             dist/kongctl-ext-debug-universal.tar.gz \
-            extension.yaml README.md bin/kongctl-ext-debug
+            kongctl-extension.yaml README.md bin/kongctl-ext-debug
 
       - name: Publish release
         uses: softprops/action-gh-release@v2
